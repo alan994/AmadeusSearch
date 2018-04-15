@@ -1,0 +1,137 @@
+<div class="container">
+		<section name="search">
+			<form #form="ngForm">
+				<div class="row">
+					<div class="col">
+						<div class="form-group">
+							<label for="originAirportIata">Origin airport IATA</label>
+							<input type="text" required class="form-control" id="originAirportIata" [(ngModel)]="searchModel.originAirportIata" name="originAirportIata">
+						</div>
+					</div>
+					<div class="col">
+						<div class="form-group">
+							<label for="departureDate">Departure date</label>
+							<input type="text" required class="form-control" id="departureDate"  (bsValueChange)="departureDateChange($event)" name="departureDate" #departureDateDP="bsDatepicker" bsDatepicker [(ngModel)]="searchModel.departureDate">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<div class="form-group">
+							<label for="destinationAirportIata">Destination airport IATA</label>
+							<input type="text" required class="form-control" id="destinationAirportIata" [(ngModel)]="searchModel.destinationAirportIata"
+							 name="destinationAirportIata">
+						</div>
+					</div>
+					<div class="col">
+						<div class="form-group">
+							<label for="returnDate">Return date</label>
+							<input type="text" required class="form-control" id="returnDate" name="returnDate" [minDate]="searchModel.departureDate" #returnDateDP="bsDatepicker" bsDatepicker [(ngModel)]="searchModel.returnDate">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<div class="form-group">
+							<label for="numberOfPassengers">Number of passengers</label>
+							<input type="number" min="1" validateMinNumber="1" class="form-control" required id="numberOfPassengers" [(ngModel)]="searchModel.numberOfPassengers"
+							 name="numberOfPassengers">
+						</div>
+					</div>
+					<div class="col">
+						<div class="form-group">
+							<label for="currency">Currency</label>
+							<select name="currency" required id="currency" class="form-control" [(ngModel)]="searchModel.currency">
+								<option [value]="currency.HRK">HRK</option>
+								<option [value]="currency.USD">USD</option>
+								<option [value]="currency.EUR">EUR</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<button class="btn btn-success" [disabled]="form.invalid || isLoading" (click)="search()">Search</button>
+			</form>
+		</section>
+		<br>
+	
+		<section name="Loading" *ngIf="isLoading">
+			<div class="spinner">
+				<div class="bounce1"></div>
+				<div class="bounce2"></div>
+				<div class="bounce3"></div>
+			</div>
+		</section>
+	
+		<section name="results" *ngIf="data && data.length !== 0 && !isLoading">
+			<div *ngFor="let option of data">
+				<h4>{{option.totalPrice | currencyText:option.currency}}</h4>
+				<div class="row">
+					<div class="col">
+						<div class="card">
+							<div class="row">
+								<div class="col-2">
+									<div class="row">
+										<div class="col card-img">
+											<img class="card-img" src="/assets/img/flight_outbound.png" alt="inbound">
+										</div>
+									</div>
+								</div>
+								<div class="col-10">
+									<div class="row">
+										<div class="col">
+											<p class="card-text bold">Polazak</p>
+											<p class="card-text">{{option.outboundFlight.departureDate | date:'short'}} - {{option.outboundFlight.departureAirportIata}}</p>
+										</div>
+										<div class="col">
+											<p class="card-text bold">Dolazak</p>
+											<p class="card-text">{{option.outboundFlight.arrivalDate | date:'short'}} - {{option.outboundFlight.destinationAirportIata}}</p>
+										</div>
+									</div>
+	
+									<div class="row">
+										<div class="col">
+											<p class="card-text">Broj putnika: {{option.outboundFlight.numberOfPassengers}}</p>
+											<p class="card-text">Broj presjedanja: {{option.outboundFlight.numberOfInterchanges}}</p>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col">
+						<div class="card">
+							<div class="row">
+								<div class="col-2">
+									<div class="row">
+										<div class="col">
+											<img class="card-img" src="/assets/img/flight_inbound.png" alt="inbound">
+										</div>
+									</div>
+								</div>
+								<div class="col-10">
+									<div class="row">
+										<div class="col">
+											<p class="card-text bold">Polazak</p>
+											<p class="card-text">{{option.inboundFlight.departureDate | date:'short'}} - {{option.inboundFlight.departureAirportIata}}</p>
+										</div>
+										<div class="col">
+											<p class="card-text bold">Dolazak</p>
+											<p class="card-text">{{option.inboundFlight.arrivalDate | date:'short'}} - {{option.inboundFlight.destinationAirportIata}}</p>
+										</div>
+									</div>
+	
+									<div class="row">
+										<div class="col">
+											<p class="card-text">Broj putnika: {{option.inboundFlight.numberOfPassengers}}</p>
+											<p class="card-text">Broj presjedanja: {{option.inboundFlight.numberOfInterchanges}}</p>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>	
+				<br />
+			</div>
+		</section>
+	</div>

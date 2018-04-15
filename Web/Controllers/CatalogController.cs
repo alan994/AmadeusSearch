@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Dto.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Web.Services;
 
 namespace Web.Controllers
@@ -20,36 +21,19 @@ namespace Web.Controllers
             this.logger = logger;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Get()
+        [HttpPost]
+        public async Task<IActionResult> Get([FromBody] SearchVM searchVM)
         {
-            var resultList = new List<FlightVM>()
+            try
             {
-                new FlightVM()
-                {
-                    Id = 1,
-                    ArrivalAirport = new AirportVM()
-                    {
-                        Id = 1,
-                        Iata = "df",
-                        Name = "JFK"
-                    },
-                    ArrivalDate = DateTime.UtcNow,
-                    Currency = Dto.Enums.Currency.EUR,
-                    DepartureAirport = new AirportVM()
-                    {
-                        Id = 2,
-                        Iata = "aafasd",
-                        Name = "Franjo tuđman"
-                    },
-                    DepartureDate = DateTime.UtcNow.AddHours(10),
-                    NumberOfInterchanges = 2,
-                    NumberOfPassengers = 60,
-                    TotalPrice = 1232m
-                }
-            };
-
-            return Json(resultList);
-        }     
+                var result = await this.catalogService.GetFlights(searchVM);
+                return Json(result);
+            }
+            catch(Exception ex)
+            {
+                this.logger.LogError($"Something went wrong. Input: {JsonConvert.SerializeObject(searchVM)} Message: {ex.Message}", ex);
+                return this.BadRequest(ex.Message);
+            }
+        }
     }
 }

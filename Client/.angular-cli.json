@@ -19,7 +19,10 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
       "styles": [
-        "styles.scss"
+		"styles.css",
+		"../node_modules/bootstrap/dist/css/bootstrap.min.css",
+		"../node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
+		"../node_modules/ngx-toastr/toastr.css"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",
@@ -54,7 +57,7 @@
     }
   },
   "defaults": {
-    "styleExt": "scss",
+    "styleExt": "css",
     "class": {
       "spec": false
     },

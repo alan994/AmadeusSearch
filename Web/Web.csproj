@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    <UserSecretsId>c8bf5a8b-3d1e-47cc-ab19-1a21de83e730</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +16,11 @@
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.2" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.2" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <ProjectReference Include="..\Dao\Dao.csproj" />

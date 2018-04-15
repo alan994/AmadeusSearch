@@ -1,11 +1,12 @@
 ﻿using Dto.Enums;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace Dto.ViewModels
+namespace Dto.Models
 {
-    public class FlightVM
+    public class Flight: BaseModel
     {
         public int Id { get; set; }
         public DateTime DepartureDate { get; set; }
@@ -14,6 +15,5 @@ namespace Dto.ViewModels
         public string DestinationAirportIata { get; set; }
         public int NumberOfInterchanges { get; set; }
         public int NumberOfPassengers { get; set; }        
-        public decimal PricePerAdult { get; set; }        
     }
 }
