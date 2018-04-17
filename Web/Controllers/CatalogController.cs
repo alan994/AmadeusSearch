@@ -30,8 +30,8 @@ namespace Web.Controllers
                 return Json(result);
             }
             catch(Exception ex)
-            {
-                this.logger.LogError($"Something went wrong. Input: {JsonConvert.SerializeObject(searchVM)} Message: {ex.Message}", ex);
+            {                
+                this.logger.LogError($"Something went wrong. Message: {ex.Message}", ex);
                 return this.BadRequest(ex.Message);
             }
         }

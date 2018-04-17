@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Dto.Enums;
+using Dto.Exceptions;
 using Dto.Models;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -116,6 +117,14 @@ namespace Web.Services.Amadeus
             return url;
         }
 
+        /// <summary>
+        /// This method ask Amadeus Web API for data.
+        /// If request fails with one of predefined error messages method will throw "BusinessException" with that message
+        /// If request fails with message that system doesn't know to handle method will retry request internally extra two times. 
+        ///     If extra two times also fails with unknown error method will throw Exception with unknown message.        ///     
+        /// </summary>
+        /// <param name="url">URL of Web API action</param>
+        /// <returns>Content of response in string</returns>
         private async Task<string> GetResponseFromServer(string url)
         {
             using (HttpClient httpClient = new HttpClient())
@@ -125,15 +134,36 @@ namespace Web.Services.Amadeus
                 {
                     try
                     {
-                        var response = await httpClient.GetStringAsync(url);
-                        return response;
+                        var response = await httpClient.GetAsync(url);
+                        if(response.StatusCode == System.Net.HttpStatusCode.OK)
+                        {
+                            return await response.Content.ReadAsStringAsync();
+                        }
+                        else
+                        {
+                            string errorObj = await response.Content.ReadAsStringAsync();
+                            dynamic parsedError = JsonConvert.DeserializeObject(errorObj);
+
+                            if(parsedError.message != null)
+                            {
+                                string message = parsedError.message.ToString();
+                                AmadeusErorrCodes.ThrowRightException(message);
+                            }
+                            
+                            //If you get to this throw unknown error
+                            throw new Exception("Unknown error, please try again later.");
+                        }
                     }
                     catch (Exception ex)
                     {
-                        if(i == 2)
+                        if(ex is BusinessException)
                         {
                             throw ex;
                         }
+                        else if(i == 2)
+                        {
+                            throw ex;
+                        }                        
                     }
                 }
             }

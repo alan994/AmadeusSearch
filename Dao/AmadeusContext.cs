@@ -30,6 +30,7 @@ namespace Dao
                 if (entry.Entity is BaseModel item)
                 {                    
                     item.CreatedOn = DateTime.UtcNow;
+                    item.UpdatedOn = DateTime.UtcNow;
                 }
             }
             #endregion

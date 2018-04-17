@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+
 using Dao;
 using Dto.Models;
 using Dto.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -16,12 +18,14 @@ namespace Web.Services
         private readonly IFlightApi flightApi;
         private readonly AmadeusContext db;
         private readonly ILogger<CatalogService> logger;
+        private readonly IConfiguration configuration;
 
-        public CatalogService(IFlightApi flightApi, AmadeusContext db, ILogger<CatalogService> logger)
+        public CatalogService(IFlightApi flightApi, AmadeusContext db, ILogger<CatalogService> logger, IConfiguration configuration)
         {
             this.flightApi = flightApi;
             this.db = db;
             this.logger = logger;
+            this.configuration = configuration;
         }
 
         public async Task<List<OptionVM>> GetFlights(SearchVM searchVM)
@@ -84,10 +88,14 @@ namespace Web.Services
 
         private async Task<List<Option>> SearchLocalFlights(Search search)
         {
+            var minutes = int.Parse(this.configuration["MaxAgeOfData"]);
+            DateTime maxAgeOfData = DateTime.UtcNow.AddMinutes(minutes * -1);
+
             var resultList = await this.db.Options
                 .Where(x => x.Search.DestinationAirportIata == search.DestinationAirportIata
-                    && x.Search.DestinationAirportIata == search.DestinationAirportIata
+                    && x.Search.OriginAirportIata == search.OriginAirportIata
                     && x.Search.ReturnDate == search.ReturnDate
+                    && x.UpdatedOn > maxAgeOfData
                     && x.Search.DepartureDate == search.DepartureDate
                     && x.Search.NumberOfPassengers == search.NumberOfPassengers
                     && x.Search.Currency == search.Currency)
