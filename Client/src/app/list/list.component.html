@@ -5,13 +5,13 @@
 					<div class="col">
 						<div class="form-group">
 							<label for="originAirportIata">Origin airport IATA</label>
-							<input type="text" required class="form-control" id="originAirportIata" [(ngModel)]="searchModel.originAirportIata" name="originAirportIata">
+							<input type="text" required class="form-control" id="originAirportIata" [typeahead]="iataCodes" [(ngModel)]="searchModel.originAirportIata" name="originAirportIata">
 						</div>
 					</div>
 					<div class="col">
 						<div class="form-group">
 							<label for="departureDate">Departure date</label>
-							<input type="text" required class="form-control" id="departureDate"  (bsValueChange)="departureDateChange($event)" name="departureDate" #departureDateDP="bsDatepicker" bsDatepicker [(ngModel)]="searchModel.departureDate">
+							<input type="text" required class="form-control" id="departureDate" [minDate]="today" (bsValueChange)="departureDateChange($event)" name="departureDate" #departureDateDP="bsDatepicker" bsDatepicker [(ngModel)]="searchModel.departureDate">
 						</div>
 					</div>
 				</div>
@@ -19,7 +19,7 @@
 					<div class="col">
 						<div class="form-group">
 							<label for="destinationAirportIata">Destination airport IATA</label>
-							<input type="text" required class="form-control" id="destinationAirportIata" [(ngModel)]="searchModel.destinationAirportIata"
+							<input type="text" required class="form-control" id="destinationAirportIata" [typeahead]="iataCodes" [(ngModel)]="searchModel.destinationAirportIata"
 							 name="destinationAirportIata">
 						</div>
 					</div>

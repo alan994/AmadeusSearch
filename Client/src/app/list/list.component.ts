@@ -5,6 +5,7 @@ import { Currency } from '../models/enums/currency.enum';
 import { OptionVM } from '../models/option.model';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Logger } from '../services/utils/log.service';
+import { IataService } from '../services/web-api/iata.service';
 
 
 @Component({
@@ -19,7 +20,12 @@ export class ListComponent implements OnInit {
 	public currency = Currency;
 	public data: OptionVM[];
 	public isLoading = false;
-	constructor(private flightService: FlightService, private logger: Logger) { }
+	public iataCodes: string[];
+	public today = new Date();
+	
+	constructor(private flightService: FlightService, private logger: Logger, iataService: IataService) { 
+		this.iataCodes = iataService.getCodes();
+	}
 	
 	search() {
 		this.isLoading = true;
@@ -29,7 +35,7 @@ export class ListComponent implements OnInit {
 			this.isLoading = false;
 		}, (response: HttpErrorResponse) => {
 			this.isLoading = false;
-			this.logger.error('Error occurred, try again!');
+			this.logger.error(response.error, 'Error!');
 		});
 	}
 	

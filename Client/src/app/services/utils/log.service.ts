@@ -15,18 +15,18 @@ export class Logger {
 		console.log(msg, data);
 	}
 
-	success(msg: string, ...data: any[]) {
+	success(msg: string, title?: string, ...data: any[]) {
 		console.debug(msg, data);
-		this.toastr.success(msg);
+		this.toastr.success(msg, title);
 	}
 
-	warning(msg: string, ...data: any[]) {
+	warning(msg: string, title?: string, ...data: any[]) {
 		console.warn(msg, data);
-		this.toastr.warning(msg);
+		this.toastr.warning(msg, title);
 	}
 
-	error(msg: string, ...data: any[]) {
+	error(msg: string, title?: string, ...data: any[]) {
 		console.error(msg, data);
-		this.toastr.error(msg);
+		this.toastr.error(msg, title);
 	}
 }

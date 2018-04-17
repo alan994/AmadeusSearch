@@ -18,6 +18,8 @@ import { CurrencyPipe } from '@angular/common';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MinNumberValidator } from './directives/min-number.directive';
+import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
+import { IataService } from './services/web-api/iata.service';
 
 @NgModule({
 	declarations: [
@@ -37,12 +39,14 @@ import { MinNumberValidator } from './directives/min-number.directive';
 		AlertModule.forRoot(),
 		BsDatepickerModule.forRoot(),
 		ToastrModule.forRoot(),
+		TypeaheadModule.forRoot(),
 		AppRoutingModule
 	],
 	providers: [
 		FlightService,
 		CurrencyPipe,
 		Logger,
+		IataService,
 		{ provide: HTTP_INTERCEPTORS, useClass: UrlInterceptor, multi: true },		
 	],
 	bootstrap: [AppComponent]
